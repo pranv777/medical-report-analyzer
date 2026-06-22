@@ -102,8 +102,3 @@ python scripts/run_evaluation.py
 
 This project is for educational and portfolio purposes only. It is **not** a medical device and should not be used for clinical decision-making.
 
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE)
