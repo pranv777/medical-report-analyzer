@@ -265,21 +265,55 @@ class AbnormalityDetector:
             ref = self.db.lookup(test_name, gender=gender, age=age)
             if ref is None:
                 log.debug(f"No reference range found for: '{test_name}'")
-                report.unknown_count += 1
-                # Still record the finding as UNKNOWN
-                finding = LabFinding(
-                    test_name=test_name,
-                    display_name=test_name,
-                    value=numeric,
-                    unit=lv.get("unit", ""),
-                    status=Status.UNKNOWN,
-                    reference_low=None,
-                    reference_high=None,
-                    critical_low=None,
-                    critical_high=None,
-                    interpretation="No reference range available for this test.",
-                )
+                # Try using ref ranges extracted directly from the report
+                ref_low = lv.get("ref_low")
+                ref_high = lv.get("ref_high")
+                inline_flag = lv.get("flag")
+
+                if ref_low is not None and ref_high is not None:
+                    status, deviation = _classify_value(
+                        numeric, ref_low, ref_high, None, None
+                    )
+                    finding = LabFinding(
+                        test_name=test_name,
+                        display_name=test_name,
+                        value=numeric,
+                        unit=lv.get("unit", ""),
+                        status=status,
+                        reference_low=ref_low,
+                        reference_high=ref_high,
+                        critical_low=None,
+                        critical_high=None,
+                        deviation_pct=round(deviation, 1) if deviation else None,
+                        interpretation=f"Reference range: {ref_low} - {ref_high}",
+                    )
+                else:
+                    report.unknown_count += 1
+                    finding = LabFinding(
+                        test_name=test_name,
+                        display_name=test_name,
+                        value=numeric,
+                        unit=lv.get("unit", ""),
+                        status=Status.UNKNOWN,
+                        reference_low=None,
+                        reference_high=None,
+                        critical_low=None,
+                        critical_high=None,
+                        interpretation="No reference range available for this test.",
+                    )
+                    report.findings.append(finding)
+                    continue
+
                 report.findings.append(finding)
+                if finding.is_critical:
+                    report.critical_flags.append(
+                        f"{finding.display_name}: {status.value} ({numeric} {finding.unit})"
+                    )
+                    report.abnormal_count += 1
+                elif finding.is_abnormal:
+                    report.abnormal_count += 1
+                else:
+                    report.normal_count += 1
                 continue
 
             status, deviation = _classify_value(

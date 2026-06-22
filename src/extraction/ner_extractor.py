@@ -72,15 +72,21 @@ class BioBERTExtractor:
     def _load_pipeline(self):
         if self._pipeline is not None:
             return
-        from transformers import pipeline as hf_pipeline
+        from transformers import pipeline as hf_pipeline, AutoTokenizer
 
         log.info(f"Loading BioBERT model: {self.cfg.primary_model}")
         device = 0 if self.cfg.use_gpu else -1
+        
+        tokenizer = AutoTokenizer.from_pretrained(
+            self.cfg.primary_model,
+            model_max_length=512,
+        )
+        
         try:
             self._pipeline = hf_pipeline(
                 "ner",
                 model=self.cfg.primary_model,
-                tokenizer=self.cfg.primary_model,
+                tokenizer=tokenizer,
                 aggregation_strategy="simple",
                 device=device,
             )
@@ -90,40 +96,57 @@ class BioBERTExtractor:
                 f"Failed to load primary model ({exc}), "
                 f"trying fallback: {self.cfg.fallback_model}"
             )
+            fallback_tokenizer = AutoTokenizer.from_pretrained(
+                self.cfg.fallback_model,
+                model_max_length=512,
+            )
             self._pipeline = hf_pipeline(
                 "ner",
                 model=self.cfg.fallback_model,
+                tokenizer=fallback_tokenizer,
                 aggregation_strategy="simple",
                 device=device,
             )
 
     def extract(self, text: str) -> List[MedicalEntity]:
         self._load_pipeline()
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(self.cfg.primary_model)
         entities: List[MedicalEntity] = []
 
-        # BioBERT max 512 tokens — chunk long texts
-        chunks = self._chunk_text(text)
-        offset = 0
-        for chunk in chunks:
-            raw = self._pipeline(chunk)
-            for item in raw:
-                score = float(item.get("score", 0.0))
-                if score < self.cfg.confidence_threshold:
-                    continue
-                label = self._normalise_label(item["entity_group"])
-                if label not in self.cfg.entity_types:
-                    continue
-                entities.append(
-                    MedicalEntity(
-                        text=item["word"].strip(),
-                        label=label,
-                        start=item["start"] + offset,
-                        end=item["end"] + offset,
-                        score=score,
-                        source="biobert",
+        # Tokenize and split into 512-token chunks with overlap
+        words = text.split()
+        chunk_size = 200   # words per chunk (safe under 512 tokens)
+        overlap = 20
+
+        chunks = []
+        for i in range(0, len(words), chunk_size - overlap):
+            chunk = " ".join(words[i: i + chunk_size])
+            chunks.append((chunk, i))
+
+        for chunk_text, word_offset in chunks:
+            try:
+                raw = self._pipeline(chunk_text)
+                for item in raw:
+                    score = float(item.get("score", 0.0))
+                    if score < self.cfg.confidence_threshold:
+                        continue
+                    label = self._normalise_label(item["entity_group"])
+                    if label not in self.cfg.entity_types:
+                        continue
+                    entities.append(
+                        MedicalEntity(
+                            text=item["word"].strip(),
+                            label=label,
+                            start=item["start"],
+                            end=item["end"],
+                            score=score,
+                            source="biobert",
+                        )
                     )
-                )
-            offset += len(chunk)
+            except Exception as exc:
+                log.warning(f"BioBERT chunk failed: {exc}")
 
         return entities
 
@@ -190,29 +213,77 @@ class SciSpacyExtractor:
 # ─────────────────────────────────────────────
 
 _LAB_PATTERN = re.compile(
-    r"(?P<test>[A-Za-z][A-Za-z0-9 \-/]{1,40})"
-    r"\s*[:\-]\s*"
+    r"^(?P<test>[A-Za-z][A-Za-z0-9 \(\)/\-]{2,40}?)"
+    r"\s{2,}"
     r"(?P<value>\d+\.?\d*)"
-    r"\s*(?P<unit>[a-zA-Z/%µ][A-Za-z/%µ0-9\.\-]*)?",
-    re.MULTILINE,
+    r"\s{2,}"
+    r"(?P<ref>\d+\.?\d*\s*-\s*\d+\.?\d*)?"
+    r"\s*(?P<unit>[a-zA-Z/%µ\^][A-Za-z/%µ0-9\.\-\^/]*)?"
+    r"(?:\s+(?P<flag>LOW|HIGH|NORMAL|ABNORMAL|CRITICAL))?",
+    re.IGNORECASE,
 )
+
+_SKIP_LINES = {
+    'patient', 'dob', 'gender', 'age', 'date', 'ref. no',
+    'ordering', 'physician', 'test', 'result', 'reference',
+    'units', 'flag', 'recommended',
+}
 
 
 def extract_lab_values(text: str) -> List[Dict]:
-    """
-    Regex-based extractor for lab test name + numeric value + unit.
-    Complements NER for structured blood-test lines.
-    """
     results = []
-    for match in _LAB_PATTERN.finditer(text):
-        results.append(
-            {
-                "test_name": match.group("test").strip(),
-                "value": match.group("value"),
-                "unit": (match.group("unit") or "").strip(),
-                "span": (match.start(), match.end()),
-            }
-        )
+    seen = set()
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or len(stripped) < 10:
+            continue
+
+        # Skip metadata/header lines
+        if any(skip in stripped.lower() for skip in _SKIP_LINES):
+            continue
+
+        # Must have multiple spaces (tabular format)
+        if '  ' not in stripped:
+            continue
+
+        m = _LAB_PATTERN.match(stripped)
+        if not m:
+            continue
+
+        test_name = m.group("test").strip()
+        value = m.group("value")
+        unit = (m.group("unit") or "").strip()
+        flag = (m.group("flag") or "").strip().upper() or None
+
+        # Parse reference range
+        ref_low, ref_high = None, None
+        ref_str = m.group("ref")
+        if ref_str:
+            parts = re.split(r'\s*-\s*', ref_str.strip())
+            try:
+                ref_low = float(parts[0])
+                ref_high = float(parts[1])
+            except (ValueError, IndexError):
+                pass
+
+        # Skip if test name looks like metadata
+        key = test_name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+
+        results.append({
+            "test_name": test_name,
+            "value": value,
+            "numeric_value": float(value) if value else None,
+            "unit": unit,
+            "ref_low": ref_low,
+            "ref_high": ref_high,
+            "flag": flag,
+            "span": (m.start(), m.end()),
+        })
+
     return results
 
 
@@ -240,12 +311,19 @@ class MedicalNERPipeline:
 
     def run(self, text: str) -> ExtractionResult:
         log.info("Running medical NER pipeline")
+        raw_text = text  # preserve original for lab parsing
         text = clean_text(text)
         result = ExtractionResult(raw_text=text)
 
         # 1. BioBERT entities biobert_ents = self.biobert.extract(text)
-        biobert_ents = []  # Skip BioBERT - causes token length issues
-        log.debug(f"BioBERT: {len(biobert_ents)} entities")
+        # 1. BioBERT entities
+        try:
+            biobert_ents = self.biobert.extract(text)
+            log.debug(f"BioBERT: {len(biobert_ents)} entities")
+        except Exception as exc:
+            log.warning(f"BioBERT extraction skipped: {exc}")
+            biobert_ents = []
+            log.debug(f"BioBERT: {len(biobert_ents)} entities")
 
         # 2. SciSpacy entities
         try:
@@ -261,7 +339,7 @@ class MedicalNERPipeline:
         result.entities = [MedicalEntity(**e) for e in merged]
 
         # 4. Regex lab values
-        result.lab_values = extract_lab_values(text)
+        result.lab_values = extract_lab_values(raw_text)
         log.debug(f"Lab values extracted: {len(result.lab_values)}")
 
         # 5. Summary grouped by label

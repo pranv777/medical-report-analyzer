@@ -82,8 +82,8 @@ class ReportIngestion:
                 file_path=str(path),
                 file_hash=file_hash(path),
                 file_type="txt",
-                pages=[PageResult(page_number=1, text=clean_text(text), extraction_method="native")],
-                full_text=clean_text(text),
+                pages=[PageResult(page_number=1, text=text, extraction_method="native")],
+                full_text=text,
                 metadata={"page_count": 1, "char_count": len(text)},
             )
 
