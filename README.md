@@ -9,33 +9,6 @@ An end-to-end AI system for analyzing medical reports (blood tests, prescription
 
 ---
 
-## 🗂 Project Structure
-
-```
-medical_rag/
-├── src/
-│   ├── ingestion/          # PDF, OCR, text extraction
-│   ├── extraction/         # BioBERT NER, entity extraction
-│   ├── detection/          # Abnormality detection engine
-│   ├── knowledge_base/     # RAG vector store, embeddings
-│   ├── rag/                # LangChain RAG pipeline
-│   ├── summarization/      # Clinical & patient summaries
-│   ├── evaluation/         # RAGAS, NER metrics, MLflow
-│   └── utils/              # Config, logging, helpers
-├── data/
-│   ├── raw/                # Raw uploaded reports
-│   ├── processed/          # Cleaned extracted text
-│   ├── knowledge_base/     # PubMed/WHO document chunks
-│   └── sample_reports/     # Demo reports for testing
-├── notebooks/              # Exploratory & evaluation notebooks
-├── tests/                  # Unit and integration tests
-├── configs/                # YAML configuration files
-├── scripts/                # Setup and build scripts
-├── models/                 # Saved model artifacts
-├── logs/                   # MLflow and app logs
-└── outputs/                # Generated summaries, JSON
-```
-
 ---
 
 ## ✨ Features
