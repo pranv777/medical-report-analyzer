@@ -13,8 +13,8 @@ rich==13.7.0
 typer==0.9.4
 click==8.1.7
 
-# PDF & OCR (Optional - skip PyMuPDF on Windows)
-# PyMuPDF==1.24.0  # Requires Visual Studio Build Tools on Windows
+# PDF & OCR 
+PyMuPDF==1.24.0  
 pdfplumber==0.10.3
 pytesseract==0.3.10
 Pillow==10.3.0
@@ -30,12 +30,12 @@ spacy==3.7.2
 # Install SciSpacy separately after spacy:
 # pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_core_sci_md-0.5.4.tar.gz
 
-# Embeddings & Vector Store (UPDATED - compatible versions)
+# Embeddings & Vector Store 
 sentence-transformers==2.3.1
 chromadb==0.4.24
 faiss-cpu==1.8.0.post1
 
-# LangChain RAG (FIXED - compatible versions)
+# LangChain RAG
 langchain==0.1.16
 langchain-core==0.1.45
 langchain-community==0.0.32
@@ -48,13 +48,12 @@ requests==2.31.0
 # HuggingFace Hub
 huggingface-hub==0.20.3
 
-# Evaluation (Optional)
-# ragas==0.1.5  # Has pydantic conflicts - skip for now
+# Evaluation 
+# ragas==0.1.5  
 mlflow==2.10.0
 scikit-learn==1.4.0
 rouge-score==0.1.2
 nltk==3.8.1
-# bert-score==0.3.13  # Optional - may have dependency issues
 
 # Data Processing
 pandas==2.1.4
