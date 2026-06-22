@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# Data (raw uploads, processed outputs — usually large)
+data/raw/
+data/processed/
+# Keep reference ranges and sample reports
+!data/reference_ranges.json
+!data/sample_reports/
+
+# Knowledge base vector store (large, rebuild with script)
+data/knowledge_base/chroma_db/
+
+# Model weights (downloaded automatically by HuggingFace/SentenceTransformers)
+models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Outputs
+outputs/
+logs/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temp
+tmp/
+temp/

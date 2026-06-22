@@ -1,0 +1,59 @@
+# ============================================================
+# configs/mlflow_config.yaml
+# MLflow experiment and run configuration
+# ============================================================
+
+mlflow:
+  tracking_uri: "logs/mlflow"
+  artifact_location: "logs/mlflow/artifacts"
+
+experiments:
+  ner_evaluation:
+    name: "ner_model_comparison"
+    tags:
+      project: "medical_rag"
+      task: "ner"
+    tracked_metrics:
+      - precision
+      - recall
+      - f1
+      - support
+    tracked_params:
+      - model_name
+      - confidence_threshold
+      - entity_types
+
+  rag_evaluation:
+    name: "rag_pipeline_eval"
+    tags:
+      project: "medical_rag"
+      task: "rag"
+    tracked_metrics:
+      - faithfulness
+      - answer_relevancy
+      - context_precision
+      - context_recall
+      - avg_latency_ms
+    tracked_params:
+      - llm_model
+      - embedding_model
+      - retrieval_top_k
+      - chunk_size
+      - chunk_overlap
+
+  embedding_comparison:
+    name: "embedding_model_benchmark"
+    tags:
+      project: "medical_rag"
+      task: "retrieval"
+    tracked_metrics:
+      - precision_at_1
+      - precision_at_3
+      - precision_at_5
+      - recall_at_5
+      - mrr
+      - latency_ms
+    tracked_params:
+      - model_name
+      - corpus_size
+      - query_count

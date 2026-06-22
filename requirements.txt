@@ -1,0 +1,79 @@
+# ============================================================
+# Medical Report Understanding — Python Dependencies
+# ============================================================
+
+# Core
+python-dotenv==1.0.0
+pydantic==2.6.4
+pydantic-settings==2.2.1
+PyYAML==6.0.1
+tqdm==4.66.1
+loguru==0.7.2
+rich==13.7.0
+typer==0.9.4
+click==8.1.7
+
+# PDF & OCR (Optional - skip PyMuPDF on Windows)
+# PyMuPDF==1.24.0  # Requires Visual Studio Build Tools on Windows
+pdfplumber==0.10.3
+pytesseract==0.3.10
+Pillow==10.3.0
+pdf2image==1.16.3
+
+# NLP & ML
+transformers==4.38.2
+torch==2.2.0
+tokenizers==0.15.1
+datasets==2.18.0
+accelerate==0.27.1
+spacy==3.7.2
+# Install SciSpacy separately after spacy:
+# pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_core_sci_md-0.5.4.tar.gz
+
+# Embeddings & Vector Store (UPDATED - compatible versions)
+sentence-transformers==2.3.1
+chromadb==0.4.24
+faiss-cpu==1.8.0.post1
+
+# LangChain RAG (FIXED - compatible versions)
+langchain==0.1.16
+langchain-core==0.1.45
+langchain-community==0.0.32
+langchain-chroma==0.1.0
+
+# LLM (Ollama local inference)
+ollama==0.1.7
+requests==2.31.0
+
+# HuggingFace Hub
+huggingface-hub==0.20.3
+
+# Evaluation (Optional)
+# ragas==0.1.5  # Has pydantic conflicts - skip for now
+mlflow==2.10.0
+scikit-learn==1.4.0
+rouge-score==0.1.2
+nltk==3.8.1
+# bert-score==0.3.13  # Optional - may have dependency issues
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.3
+scipy==1.12.0
+
+# Visualization
+matplotlib==3.8.2
+plotly==5.18.0
+seaborn==0.13.2
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0
+
+# Dev utilities
+black==24.1.1
+isort==5.13.2
+flake8==7.0.0
+jupyter==1.0.0
+ipywidgets==8.1.1

@@ -1,0 +1,142 @@
+# ============================================================
+# configs/config.yaml — Main Configuration
+# ============================================================
+
+project:
+  name: "Medical Report Understanding"
+  version: "1.0.0"
+  log_level: "INFO"
+  output_dir: "outputs/"
+  log_dir: "logs/"
+
+# ─────────────────────────────────────────────
+# Ingestion
+# ─────────────────────────────────────────────
+ingestion:
+  supported_formats: ["pdf", "png", "jpg", "jpeg", "tiff"]
+  ocr:
+    engine: "tesseract"              # tesseract | easyocr
+    language: "eng"
+    dpi: 300
+    preprocess: true                 # denoise + deskew before OCR
+  pdf:
+    extract_images: true
+    fallback_to_ocr: true            # use OCR when text layer is absent
+  text_cleaning:
+    remove_headers_footers: true
+    normalize_whitespace: true
+    min_text_length: 50              # skip pages with too little text
+
+# ─────────────────────────────────────────────
+# Entity Extraction (NER)
+# ─────────────────────────────────────────────
+extraction:
+  primary_model: "dmis-lab/biobert-base-cased-v1.2"
+  fallback_model: "allenai/scibert_scivocab_uncased"
+  spacy_model: "en_core_sci_md"
+  entity_types:
+    - DISEASE
+    - SYMPTOM
+    - MEDICATION
+    - DOSAGE
+    - LAB_TEST
+    - LAB_VALUE
+    - PROCEDURE
+    - ANATOMY
+    - MEDICAL_CONDITION
+  confidence_threshold: 0.75
+  batch_size: 16
+  max_seq_length: 512
+  use_gpu: false                     # set true if CUDA available
+
+# ─────────────────────────────────────────────
+# Abnormality Detection
+# ─────────────────────────────────────────────
+detection:
+  reference_db_path: "data/reference_ranges.json"
+  critical_alert_threshold: 0.2     # flag if >20% outside critical range
+  gender_aware: true
+  age_aware: true
+  status_labels:
+    low: "Low"
+    normal: "Normal"
+    high: "High"
+    critical_low: "Critical Low"
+    critical_high: "Critical High"
+
+# ─────────────────────────────────────────────
+# Knowledge Base & Embeddings
+# ─────────────────────────────────────────────
+knowledge_base:
+  embedding_model: "BAAI/bge-large-en-v1.5"
+  vector_store: "chromadb"
+  chromadb_path: "data/knowledge_base/chroma_db"
+  collection_name: "medical_knowledge"
+  chunking:
+    strategy: "recursive"            # recursive | sentence | fixed
+    chunk_size: 512
+    chunk_overlap: 64
+  retrieval:
+    top_k: 5
+    score_threshold: 0.4
+    search_type: "mmr"               # similarity | mmr
+  sources:
+    pubmed: true
+    who_guidelines: true
+    nih_resources: true
+    custom_documents: true
+    custom_documents_path: "data/knowledge_base/custom/"
+
+# ─────────────────────────────────────────────
+# RAG Pipeline
+# ─────────────────────────────────────────────
+rag:
+  llm_provider: "ollama"            # ollama | huggingface | openai
+  llm_model: "llama3"               # llama3 | mistral | qwen
+  ollama_base_url: "http://localhost:11434"
+  temperature: 0.1
+  max_tokens: 1024
+  system_prompt: |
+    You are a helpful medical AI assistant. Your role is to help patients
+    understand their medical reports. Always be accurate, cite your sources,
+    and remind users to consult a qualified healthcare professional for
+    medical decisions. Never diagnose or prescribe.
+  memory:
+    enabled: true
+    max_history_turns: 6
+
+# ─────────────────────────────────────────────
+# Summarization
+# ─────────────────────────────────────────────
+summarization:
+  clinical_max_tokens: 600
+  patient_max_tokens: 400
+  reading_level: "8th grade"        # target for patient summary
+  include_recommendations: true
+  include_follow_up_questions: true
+  num_follow_up_questions: 5
+
+# ─────────────────────────────────────────────
+# Evaluation
+# ─────────────────────────────────────────────
+evaluation:
+  mlflow:
+    enabled: true
+    tracking_uri: "logs/mlflow"
+    experiment_name: "medical_rag_eval"
+  ragas:
+    metrics:
+      - faithfulness
+      - answer_relevancy
+      - context_precision
+      - context_recall
+  ner:
+    test_dataset: "data/processed/ner_test.json"
+    metrics: ["precision", "recall", "f1"]
+  embedding_comparison:
+    models:
+      - "BAAI/bge-large-en-v1.5"
+      - "intfloat/e5-large-v2"
+      - "sentence-transformers/all-MiniLM-L6-v2"
+    metrics: ["precision_at_k", "recall_at_k", "mrr"]
+    k_values: [1, 3, 5]

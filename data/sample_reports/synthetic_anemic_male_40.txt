@@ -1,0 +1,48 @@
+COMPREHENSIVE BLOOD PANEL
+============================================================
+Patient   : John Smith
+Gender    : Male
+Age       : 40 years
+Ref. No   : LAB-2026-770487
+Date      : 07-Jun-2026
+
+============================================================
+HAEMATOLOGY
+============================================================
+Test                               Result  Reference Range      Unit       Flag
+--------------------------------------------------------------------------------
+Haemoglobin                           9.0  13.5 - 17.5          g/dL       LOW
+WBC Count                             6.9  4.5 - 11.0           10^3/µL    Normal
+Platelet Count                      192.0  150 - 400            10^3/µL    Normal
+
+============================================================
+METABOLIC PANEL
+============================================================
+Test                               Result  Reference Range      Unit       Flag
+--------------------------------------------------------------------------------
+Fasting Blood Glucose                90.0  70 - 100             mg/dL      Normal
+HbA1c                                 5.2  Below 5.7            %          Normal
+Serum Creatinine                      0.8  0.74 - 1.35          mg/dL      Normal
+
+============================================================
+LIPID PROFILE
+============================================================
+Test                               Result  Reference Range      Unit       Flag
+--------------------------------------------------------------------------------
+Total Cholesterol                   185.5  Below 200            mg/dL      Normal
+LDL Cholesterol                     110.6  Below 100            mg/dL      Normal
+HDL Cholesterol                      48.6  Above 40             mg/dL      Normal
+Triglycerides                       126.8  Below 150            mg/dL      Normal
+
+============================================================
+THYROID & VITAMINS
+============================================================
+Test                               Result  Reference Range      Unit       Flag
+--------------------------------------------------------------------------------
+TSH                                   3.4  0.4 - 4.0            mIU/L      Normal
+Vitamin D (25-OH)                    12.1  30 - 100             ng/mL      LOW
+Serum Ferritin                        6.0  20 - 500             ng/mL      LOW
+
+============================================================
+Results are for clinical correlation only.
+============================================================

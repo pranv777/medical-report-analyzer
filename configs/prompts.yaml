@@ -1,0 +1,29 @@
+# ============================================================
+# configs/prompts.yaml
+# Override default prompt templates without editing Python code.
+# Keys map to PromptLibrary attributes in src/rag/prompt_templates.py
+# Uncomment and edit any template to customise it.
+# ============================================================
+
+prompts:
+
+  # ── RAG Q&A system message (appended to every query) ──────
+  # rag_system_suffix: |
+  #   Always end your answer with: "Please consult your doctor for personalised advice."
+
+  # ── Clinical summary max word count ───────────────────────
+  clinical_summary_max_words: 400
+
+  # ── Patient summary settings ──────────────────────────────
+  patient_summary_max_words: 300
+  patient_reading_level: "8th grade"
+
+  # ── Number of follow-up questions and recommendations ─────
+  num_follow_up_questions: 5
+  num_recommendations: 5
+
+  # ── Disclaimer appended to all patient-facing output ──────
+  disclaimer: >
+    ⚠ This information is for educational purposes only and does not
+    constitute medical advice. Always consult a qualified healthcare
+    professional before making any health decisions.

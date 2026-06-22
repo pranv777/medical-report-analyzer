@@ -1,0 +1,204 @@
+{
+  "hemoglobin": {
+    "display_name": "Hemoglobin",
+    "unit": "g/dL",
+    "ranges": {
+      "male":   { "low": 13.5, "high": 17.5, "critical_low": 7.0, "critical_high": 20.0 },
+      "female": { "low": 12.0, "high": 15.5, "critical_low": 7.0, "critical_high": 20.0 },
+      "child":  { "low": 11.0, "high": 16.0, "critical_low": 7.0, "critical_high": 20.0 }
+    },
+    "aliases": ["hgb", "hb"]
+  },
+  "hematocrit": {
+    "display_name": "Hematocrit",
+    "unit": "%",
+    "ranges": {
+      "male":   { "low": 41.0, "high": 53.0, "critical_low": 20.0, "critical_high": 60.0 },
+      "female": { "low": 36.0, "high": 46.0, "critical_low": 20.0, "critical_high": 60.0 }
+    },
+    "aliases": ["hct", "packed cell volume", "pcv"]
+  },
+  "wbc": {
+    "display_name": "White Blood Cell Count",
+    "unit": "10^3/µL",
+    "ranges": {
+      "default": { "low": 4.5, "high": 11.0, "critical_low": 2.0, "critical_high": 30.0 }
+    },
+    "aliases": ["white blood cells", "leukocytes", "wbc count"]
+  },
+  "rbc": {
+    "display_name": "Red Blood Cell Count",
+    "unit": "10^6/µL",
+    "ranges": {
+      "male":   { "low": 4.5, "high": 5.9, "critical_low": 2.0, "critical_high": 8.0 },
+      "female": { "low": 4.1, "high": 5.1, "critical_low": 2.0, "critical_high": 8.0 }
+    },
+    "aliases": ["red blood cells", "erythrocytes"]
+  },
+  "platelets": {
+    "display_name": "Platelet Count",
+    "unit": "10^3/µL",
+    "ranges": {
+      "default": { "low": 150.0, "high": 400.0, "critical_low": 50.0, "critical_high": 1000.0 }
+    },
+    "aliases": ["thrombocytes", "plt"]
+  },
+  "glucose": {
+    "display_name": "Blood Glucose (Fasting)",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 70.0, "high": 100.0, "critical_low": 40.0, "critical_high": 500.0 }
+    },
+    "aliases": ["blood sugar", "fasting glucose", "fbs"]
+  },
+  "hba1c": {
+    "display_name": "Hemoglobin A1c",
+    "unit": "%",
+    "ranges": {
+      "default": { "low": 0.0, "high": 5.6, "critical_low": 0.0, "critical_high": 14.0 }
+    },
+    "aliases": ["glycated hemoglobin", "a1c", "hba1c"]
+  },
+  "creatinine": {
+    "display_name": "Creatinine",
+    "unit": "mg/dL",
+    "ranges": {
+      "male":   { "low": 0.74, "high": 1.35, "critical_low": 0.1, "critical_high": 10.0 },
+      "female": { "low": 0.59, "high": 1.04, "critical_low": 0.1, "critical_high": 10.0 }
+    },
+    "aliases": ["serum creatinine", "cr"]
+  },
+  "bun": {
+    "display_name": "Blood Urea Nitrogen",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 7.0, "high": 20.0, "critical_low": 2.0, "critical_high": 100.0 }
+    },
+    "aliases": ["urea nitrogen", "blood urea"]
+  },
+  "sodium": {
+    "display_name": "Sodium",
+    "unit": "mEq/L",
+    "ranges": {
+      "default": { "low": 136.0, "high": 145.0, "critical_low": 120.0, "critical_high": 160.0 }
+    },
+    "aliases": ["na", "serum sodium"]
+  },
+  "potassium": {
+    "display_name": "Potassium",
+    "unit": "mEq/L",
+    "ranges": {
+      "default": { "low": 3.5, "high": 5.1, "critical_low": 2.5, "critical_high": 6.5 }
+    },
+    "aliases": ["k", "serum potassium"]
+  },
+  "calcium": {
+    "display_name": "Calcium",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 8.6, "high": 10.3, "critical_low": 6.0, "critical_high": 13.0 }
+    },
+    "aliases": ["ca", "serum calcium", "total calcium"]
+  },
+  "total_cholesterol": {
+    "display_name": "Total Cholesterol",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 0.0, "high": 200.0, "critical_low": 0.0, "critical_high": 300.0 }
+    },
+    "aliases": ["cholesterol", "total chol"]
+  },
+  "ldl": {
+    "display_name": "LDL Cholesterol",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 0.0, "high": 100.0, "critical_low": 0.0, "critical_high": 190.0 }
+    },
+    "aliases": ["ldl-c", "low density lipoprotein"]
+  },
+  "hdl": {
+    "display_name": "HDL Cholesterol",
+    "unit": "mg/dL",
+    "ranges": {
+      "male":   { "low": 40.0, "high": 999.0, "critical_low": 20.0, "critical_high": 999.0 },
+      "female": { "low": 50.0, "high": 999.0, "critical_low": 20.0, "critical_high": 999.0 }
+    },
+    "aliases": ["hdl-c", "high density lipoprotein", "good cholesterol"]
+  },
+  "triglycerides": {
+    "display_name": "Triglycerides",
+    "unit": "mg/dL",
+    "ranges": {
+      "default": { "low": 0.0, "high": 150.0, "critical_low": 0.0, "critical_high": 500.0 }
+    },
+    "aliases": ["tg", "trigs"]
+  },
+  "alt": {
+    "display_name": "Alanine Aminotransferase",
+    "unit": "U/L",
+    "ranges": {
+      "male":   { "low": 7.0, "high": 56.0, "critical_low": 0.0, "critical_high": 1000.0 },
+      "female": { "low": 7.0, "high": 45.0, "critical_low": 0.0, "critical_high": 1000.0 }
+    },
+    "aliases": ["sgpt", "alanine transaminase"]
+  },
+  "ast": {
+    "display_name": "Aspartate Aminotransferase",
+    "unit": "U/L",
+    "ranges": {
+      "male":   { "low": 10.0, "high": 40.0, "critical_low": 0.0, "critical_high": 1000.0 },
+      "female": { "low": 10.0, "high": 35.0, "critical_low": 0.0, "critical_high": 1000.0 }
+    },
+    "aliases": ["sgot", "aspartate transaminase"]
+  },
+  "tsh": {
+    "display_name": "Thyroid Stimulating Hormone",
+    "unit": "mIU/L",
+    "ranges": {
+      "default": { "low": 0.4, "high": 4.0, "critical_low": 0.01, "critical_high": 100.0 }
+    },
+    "aliases": ["thyroid stimulating hormone", "thyrotropin"]
+  },
+  "t4": {
+    "display_name": "Thyroxine (Free T4)",
+    "unit": "ng/dL",
+    "ranges": {
+      "default": { "low": 0.8, "high": 1.8, "critical_low": 0.3, "critical_high": 5.0 }
+    },
+    "aliases": ["free t4", "ft4", "thyroxine"]
+  },
+  "vitamin_d": {
+    "display_name": "Vitamin D (25-OH)",
+    "unit": "ng/mL",
+    "ranges": {
+      "default": { "low": 30.0, "high": 100.0, "critical_low": 10.0, "critical_high": 150.0 }
+    },
+    "aliases": ["25-hydroxyvitamin d", "25-oh vitamin d", "vitamin d3"]
+  },
+  "vitamin_b12": {
+    "display_name": "Vitamin B12",
+    "unit": "pg/mL",
+    "ranges": {
+      "default": { "low": 200.0, "high": 900.0, "critical_low": 100.0, "critical_high": 2000.0 }
+    },
+    "aliases": ["cobalamin", "b12", "cyanocobalamin"]
+  },
+  "ferritin": {
+    "display_name": "Ferritin",
+    "unit": "ng/mL",
+    "ranges": {
+      "male":   { "low": 20.0,  "high": 500.0, "critical_low": 5.0, "critical_high": 1000.0 },
+      "female": { "low": 12.0,  "high": 150.0, "critical_low": 5.0, "critical_high": 1000.0 }
+    },
+    "aliases": ["serum ferritin"]
+  },
+  "uric_acid": {
+    "display_name": "Uric Acid",
+    "unit": "mg/dL",
+    "ranges": {
+      "male":   { "low": 3.4, "high": 7.0, "critical_low": 1.0, "critical_high": 12.0 },
+      "female": { "low": 2.4, "high": 6.0, "critical_low": 1.0, "critical_high": 12.0 }
+    },
+    "aliases": ["serum uric acid", "urate"]
+  }
+}
