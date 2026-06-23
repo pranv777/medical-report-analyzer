@@ -210,13 +210,3 @@ Ollama runs Llama3 entirely on-device. No OpenAI or Anthropic API keys required 
 - [ ] Docker containerization
 
 ---
-
-## Research
-
-Built alongside a research paper on **Wi-Fi RSSI-based Indoor Positioning Systems** accepted at **ICICA 2026**.
-
----
-
-## License
-
-MIT
